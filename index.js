@@ -1,10 +1,12 @@
 let persons = require('./phonebook.json')
 
 const express = require('express')
-const { response } = require('express')
+const { requestLogger } = require('./middleware/logMware')
+const { unknownEndpoint } = require('./middleware/unknownEndpointMware')
 const app = express()
 
 app.use(express.json())
+app.use(requestLogger)
 
 //GET HOME
 app.get('/info', (request, response) => {
@@ -69,6 +71,8 @@ app.post('/api/persons', (request, response) => {
     persons = [...persons, person]
     response.json(person)
 })
+
+app.use(unknownEndpoint)
 
 const PORT = 5000
 app.listen(PORT, () => {
